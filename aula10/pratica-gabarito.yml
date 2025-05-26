@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-final
+spec:
+  initContainers:
+    - name: init-check
+      image: busybox
+      command: ["sh", "-c", "echo 'Verificando pré-condições...'; sleep 5"]
+      volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/nginx
+
+  containers:
+    - name: nginx
+      image: nginx
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "echo 'Iniciado em: ' $(date) >> /var/log/nginx/start.log"]
+        preStop:
+          exec:
+            command: ["/bin/sh", "-c", "echo 'Encerrando em: ' $(date) >> /var/log/nginx/stop.log"]
+      volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/nginx
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 5
+        periodSeconds: 5
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+
+    - name: log-sidecar
+      image: busybox
+      command: ["/bin/sh", "-c", "tail -n+1 -F /var/log/nginx/*.log"]
+      volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/nginx
+
+  volumes:
+    - name: log-volume
+      emptyDir: {}

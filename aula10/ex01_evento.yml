@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exemplo-poststart-prestop
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["/bin/sh", "-c", "sleep 3600"]
+    lifecycle:
+      postStart:
+        exec:
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "echo 'Container iniciado em: ' $(date) >> /log/registro.log"
+      preStop:
+        exec:
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "echo 'Container encerrando em: ' $(date) >> /log/registro.log"
+    volumeMounts:
+      - name: log-volume
+        mountPath: /log
+  volumes:
+    - name: log-volume
+      emptyDir: {}

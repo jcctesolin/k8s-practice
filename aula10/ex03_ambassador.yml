@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador-pod
+spec:
+  containers:
+  - name: app
+    image: curlimages/curl
+    command: ["/bin/sh", "-c", "sleep 3600"]
+  - name: ambassador
+    image: alpine/socat
+    args: ["tcp-listen:8080,fork,reuseaddr", "tcp-connect:httpbin.org:80"]

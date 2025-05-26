@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-com-init
+spec:
+  initContainers:
+    - name: aguarda-banco
+      image: busybox
+      command: ['sh', '-c', 'until nslookup meu-banco; do echo "Aguardando banco..."; sleep 5; done']
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 80
