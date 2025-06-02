@@ -1,0 +1,12 @@
+# backend-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  labels:
+    role: backend
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["sleep", "3600"]

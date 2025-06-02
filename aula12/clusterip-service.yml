@@ -1,0 +1,12 @@
+# clusterip-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    role: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
