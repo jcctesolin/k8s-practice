@@ -1,0 +1,23 @@
+# replicaset.yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+  namespace: aplicacao-web          # vincula ao namespace criado
+  labels:
+    app: nginx                      # rótulo usado pelo selector
+spec:
+  replicas: 3                       # número desejado de Pods
+  selector:
+    matchLabels:
+      app: nginx                    # deve coincidir com o template
+  template:                         # espec. do Pod criado pelo ReplicaSet
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        ports:
+        - containerPort: 80

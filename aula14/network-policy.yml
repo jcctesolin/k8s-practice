@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: permitir-so-servicos-do-namespace
+  namespace: aplicacao-web
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector: {}  # Permite tráfego apenas entre Pods do mesmo namespace
+  policyTypes:
+  - Ingress
