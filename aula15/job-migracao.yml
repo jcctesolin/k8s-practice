@@ -1,0 +1,13 @@
+# arquivo: job-migracao.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migracao-dados
+spec:
+  template:
+    spec:
+      containers:
+      - name: migrador
+        image: alpine
+        command: ["sh", "-c", "echo 'Iniciando migração...' && sleep 10 && echo 'Migração concluída com sucesso'"]
+      restartPolicy: Never

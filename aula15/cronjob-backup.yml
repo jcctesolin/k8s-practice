@@ -1,0 +1,16 @@
+# arquivo: cronjob-backup.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-agendado
+spec:
+  schedule: "*/1 * * * *"  # a cada 1 minuto
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: alpine
+            command: ["sh", "-c", "echo 'Backup iniciado em $(date)' && sleep 5 && echo 'Backup finalizado'"]
+          restartPolicy: OnFailure
